@@ -34,7 +34,9 @@
             android:layout_width="260dp"
             android:layout_height="match_parent"
             android:layout_gravity="start"
-            app:menu="@menu/menu_drawer_left"/>
+            android:background="@drawable/gradual_color_zbg"
+            app:menu="@menu/menu_drawer_left"
+            app:itemTextColor="@color/white"/>
 
 
     </androidx.drawerlayout.widget.DrawerLayout>

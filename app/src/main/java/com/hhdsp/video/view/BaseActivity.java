@@ -63,7 +63,7 @@ public abstract class BaseActivity<T extends ViewBinding> extends AppCompatActiv
      * 默认设置状态栏配置(状态栏为粉红色、字体自动变色(须指定状态栏颜色),同时解决状态栏和布局重叠问题)
      */
     private void initImmersionBar() {
-        initImmersionBar(R.color.white);
+        initImmersionBar(R.color.beijng);
     }
 
     /**
@@ -71,6 +71,8 @@ public abstract class BaseActivity<T extends ViewBinding> extends AppCompatActiv
      */
     protected void initImmersionBar(int color) {
         ImmersionBar.with(this).transparentNavigationBar().statusBarColor(color).autoStatusBarDarkModeEnable(true, 0.2f).fitsSystemWindows(true).init();
+        //ImmersionBar.with(this).fitsSystemWindows(true).init();
+
     }
 
     @Override

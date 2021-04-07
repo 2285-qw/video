@@ -6,24 +6,24 @@
         android:id="@+id/eee">
         <item
             android:id="@+id/nav_collect"
-            android:icon="@drawable/ic_menu_camera"
+            android:icon="@mipmap/sm"
             android:title="私密文件夹"/>
         <item
             android:id="@+id/nav_about"
-            android:icon="@drawable/ic_menu_slideshow"
+            android:icon="@mipmap/ys"
             android:title="隐私政策"/>
         <item
             android:id="@+id/nav_gallery"
-            android:icon="@drawable/ic_menu_gallery"
+            android:icon="@mipmap/yhxy"
             android:title="用户协议"/>
         <item
             android:id="@+id/nav_manage"
-            android:icon="@drawable/ic_menu_manage"
+            android:icon="@mipmap/wtfk"
             android:title="问题识别"/>
 
         <item
             android:id="@+id/nav_manage1"
-            android:icon="@drawable/ic_menu_manage"
+            android:icon="@mipmap/bbgx"
             android:title="版本更新"/>
     </group>
 
