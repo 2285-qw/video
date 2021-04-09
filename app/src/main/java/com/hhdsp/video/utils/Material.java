@@ -1,12 +1,14 @@
 package com.hhdsp.video.utils;
 
+import java.io.Serializable;
+
 /**
  * Time:         2021/4/7
  * Author:       C
  * Description:  Material
  * on:
  */
-public class Material {
+public class Material implements Serializable {
     String name;//名字
     long size;//大小
     String url;//路径

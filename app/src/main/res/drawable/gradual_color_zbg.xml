@@ -5,6 +5,7 @@
     <gradient
         android:startColor="#6588FF"
         android:endColor="#7A7DFF"
+        android:angle="270"
         />
 
     android:startColor="#aa000000"  渐变起始色值

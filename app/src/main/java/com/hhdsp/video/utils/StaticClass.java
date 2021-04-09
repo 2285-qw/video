@@ -4,6 +4,11 @@ import android.content.Context;
 import android.database.Cursor;
 import android.provider.MediaStore;
 import android.util.Log;
+import android.widget.ImageView;
+
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.resource.bitmap.RoundedCorners;
+import com.bumptech.glide.request.RequestOptions;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -80,5 +85,30 @@ public class StaticClass {
             }
         }
         return map;
+    }
+
+    /**
+     * 加载第四秒的帧数作为封面
+     * url就是视频的地址
+     */
+    public static void loadCover(ImageView imageView, String url, Context context) {
+
+        //Glide设置图片圆角角度
+        RoundedCorners roundedCorners = new RoundedCorners(20);
+        //通过RequestOptions扩展功能,override:采样率,因为ImageView就这么大,可以压缩图片,降低内存消耗
+        // RequestOptions options = RequestOptions.bitmapTransform(roundedCorners).override(20, 20);
+        RequestOptions options = RequestOptions.bitmapTransform(roundedCorners);
+
+        imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
+        Glide.with(context)
+                .setDefaultRequestOptions(
+                        new RequestOptions()
+                                .frame(1000000)
+                                .centerCrop()
+
+                )
+                .load(url)
+                .apply(options)
+                .into(imageView);
     }
 }

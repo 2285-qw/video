@@ -24,22 +24,41 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="创建您的密码" />
+                android:layout_marginTop="40dp"
+                android:text="创建您的密码"
+                android:textColor="#333333"
+                android:textSize="20dp" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="访问您的私密文件需要密码哦" />
+                android:layout_marginTop="10dp"
+                android:text="访问您的私密文件需要密码哦"
+                android:textColor="#999999"
+                android:textSize="14dp" />
 
             <EditText
+                android:id="@+id/exid"
                 android:layout_width="80dp"
-                android:layout_height="wrap_content" />
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:background="@drawable/edit_bg"
+                android:digits="0123456789"
+                android:gravity="center"
+                android:maxLength="4"
+                android:password="true"
+                android:textSize="18sp" />
 
             <Button
+                android:id="@+id/button"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="继续" />
-
+                android:layout_marginLeft="40dp"
+                android:layout_marginTop="40dp"
+                android:layout_marginRight="40dp"
+                android:background="@drawable/ic_button_bj"
+                android:text="完成"
+                android:textColor="@color/white" />
 
         </LinearLayout>
 
