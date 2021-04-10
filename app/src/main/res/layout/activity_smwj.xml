@@ -15,11 +15,13 @@
         app:layout_constraintTop_toBottomOf="@+id/include">
 
         <LinearLayout
+            android:id="@+id/llcj"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_gravity="center"
             android:gravity="center_horizontal"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            android:visibility="gone">
 
             <TextView
                 android:layout_width="wrap_content"
@@ -61,6 +63,66 @@
                 android:textColor="@color/white" />
 
         </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/lldl"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center_horizontal"
+            android:orientation="vertical"
+            android:visibility="gone">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="40dp"
+                android:text="请输入您的密码"
+                android:textColor="#333333"
+                android:textSize="20dp" />
+
+
+            <EditText
+                android:id="@+id/exid1"
+                android:layout_width="160dp"
+                android:layout_height="40dp"
+                android:layout_marginTop="20dp"
+                android:layout_marginBottom="20dp"
+                android:background="@drawable/edit_bg"
+                android:digits="0123456789"
+                android:gravity="center"
+                android:maxLength="4"
+                android:password="true"
+                android:textSize="18sp" />
+
+            <TextView
+                android:id="@+id/tishi"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="密码错误请重新输入"
+                android:textColor="#F60606"
+                android:visibility="gone" />
+
+
+            <Button
+                android:id="@+id/button1"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="40dp"
+                android:layout_marginTop="20dp"
+                android:layout_marginRight="40dp"
+                android:background="@drawable/ic_button_bj"
+                android:text="完成"
+                android:textColor="@color/white" />
+
+
+        </LinearLayout>
+
+        <ListView
+            android:id="@+id/mlistview"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:visibility="gone"
+            android:divider="@null" />
 
     </FrameLayout>
 

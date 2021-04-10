@@ -30,11 +30,11 @@
         <activity android:name=".view.spxqActivity">
         </activity>
 
-        <!--播放页面-->
+       <!-- 播放页面
         <activity android:name=".view.GSYVideoActivity"
             android:configChanges="keyboard|keyboardHidden|orientation|screenSize|screenLayout|smallestScreenSize|uiMode"
             android:screenOrientation="portrait">
-        </activity>
+        </activity>-->
 
         <meta-data
             android:name="android.max_aspect"

@@ -94,7 +94,7 @@ public class MainActivity extends BaseActivity<ActivityMainBinding> {
     @Override
     protected void onResume() {
         super.onResume();
-        map = StaticClass.getList(this);
+        map = StaticClass.getMap(this);
         viewBinding.mlistview.setAdapter(new mainList(map, this));
     }
 }

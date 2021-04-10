@@ -10,6 +10,12 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners;
 import com.bumptech.glide.request.RequestOptions;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -25,7 +31,7 @@ import java.util.Map;
 public class StaticClass {
 
     //获取手机里的视频文件
-    public static Map<String, List<Material>> getList(Context context) {
+    public static Map<String, List<Material>> getMap(Context context) {
         List<Material> list = null;
         Map<String, List<Material>> map = new HashMap<>();
         if (context != null) {
@@ -62,6 +68,7 @@ public class StaticClass {
                             .getLong(cursor
                                     .getColumnIndexOrThrow(MediaStore.Video.Media.SIZE));
 
+                    if (!(title.indexOf(".")==0)){
                     Material video = new Material();
                     video.setName1(title);
                     video.setSize1(size);
@@ -79,7 +86,7 @@ public class StaticClass {
                     } else {
                         map.put((String) strings.get(strings.size() - 2), list);
                     }
-
+                    }
                 }
                 cursor.close();
             }
@@ -111,4 +118,141 @@ public class StaticClass {
                 .apply(options)
                 .into(imageView);
     }
+
+    //将密码存到本地
+    public static boolean writeObjectIntoLocal(Context context, String fileName, String passwod) {
+        try {
+            // 通过openFileOutput方法得到一个输出流，方法参数为创建的文件名（不能有斜杠），操作模式
+            @SuppressWarnings("deprecation")
+            FileOutputStream fos = context.openFileOutput(fileName, Context.MODE_PRIVATE);
+            ObjectOutputStream oos = new ObjectOutputStream(fos);
+            oos.writeObject(passwod);//写入
+            fos.close();//关闭输入流
+            oos.close();
+            return true;
+        } catch (IOException e) {
+            e.printStackTrace();
+            //Toast.makeText(WebviewTencentActivity.this, "出现异常2",Toast.LENGTH_LONG).show();
+            return false;
+        }
+    }
+
+    //读取本地密码
+    public static String readObjectFromLocal(Context context, String fielName) {
+        String bean;
+        try {
+            FileInputStream fis = context.openFileInput(fielName);//获得输入流
+            ObjectInputStream ois = new ObjectInputStream(fis);
+            bean = (String) ois.readObject();
+            fis.close();
+            ois.close();
+            return bean;
+
+        } catch (IOException e) {
+            e.printStackTrace();
+            return null;
+        } catch (ClassNotFoundException e) {
+            //Toast.makeText(ShareTencentActivity.this,"出现异常6",Toast.LENGTH_LONG).show();//弹出Toast消息
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    // 判断文件是否存在
+    public static boolean fileIsExists(String strFile, Context context) {
+        try {
+            File file = context.getFileStreamPath(strFile);
+            if (file.exists()) {
+                return true;
+            }
+        } catch (Exception e) {
+            return false;
+        }
+        return false;
+    }
+
+    //获取手机里的视频文件
+    public static List<Material> getList(Context context) {
+        List<Material> list = null;
+        if (context != null) {
+            Cursor cursor = context.getContentResolver().query(
+                    MediaStore.Video.Media.EXTERNAL_CONTENT_URI, null, null,
+                    null, null);
+            if (cursor != null) {
+                list = new ArrayList<>();
+                while (cursor.moveToNext()) {
+                    int id = cursor.getInt(cursor
+                            .getColumnIndexOrThrow(MediaStore.Video.Media._ID));
+                    String title = cursor
+                            .getString(cursor
+                                    .getColumnIndexOrThrow(MediaStore.Video.Media.TITLE));
+                    String album = cursor
+                            .getString(cursor
+                                    .getColumnIndexOrThrow(MediaStore.Video.Media.ALBUM));
+                    String artist = cursor
+                            .getString(cursor
+                                    .getColumnIndexOrThrow(MediaStore.Video.Media.ARTIST));
+                    String displayName = cursor
+                            .getString(cursor
+                                    .getColumnIndexOrThrow(MediaStore.Video.Media.DISPLAY_NAME));
+                    String mimeType = cursor
+                            .getString(cursor
+                                    .getColumnIndexOrThrow(MediaStore.Video.Media.MIME_TYPE));
+                    String path = cursor
+                            .getString(cursor
+                                    .getColumnIndexOrThrow(MediaStore.Video.Media.DATA));
+                    long duration = cursor
+                            .getInt(cursor
+                                    .getColumnIndexOrThrow(MediaStore.Video.Media.DURATION));
+                    long size = cursor
+                            .getLong(cursor
+                                    .getColumnIndexOrThrow(MediaStore.Video.Media.SIZE));
+
+                    Material video = new Material();
+
+                    if (title.indexOf(".") == 0) {
+                        video.setName1(title);
+                        video.setSize1(size);
+                        video.setUrl1(path);
+                        video.setDuration1(duration);
+                        Log.d("PATH1", "title" + title + "size" + size + "path" + path + "duration" + duration);
+
+                        list.add(video);
+                    }
+
+                }
+                cursor.close();
+            }
+        }
+        return list;
+    }
+
+    /**
+     * @Description 得到文件所在路径（即全路径去掉完整文件名）
+     * @param filepath 文件全路径名称，like mnt/sda/XX.xx
+     * @return 根路径，like mnt/sda
+     */
+    public static String getPathFromFilepath(final String filepath) {
+        int pos = filepath.lastIndexOf('/');
+        if (pos != -1) {
+            return filepath.substring(0, pos);
+        }
+        return "";
+    }
+
+    /**
+     * @Description 重新整合路径，将路径一和文件名通过'/'连接起来得到新路径
+     * @param path1 路径一
+     * @param path2 路径二
+     * @return 新路径
+     */
+    public static String makePath(final String path1, final String path2) {
+        if (path1.endsWith(File.separator)) {
+            return path1 + path2;
+        }
+        return path1 + File.separator + path2;
+    }
+
+
+
 }
