@@ -30,6 +30,11 @@ import java.util.Map;
  */
 public class StaticClass {
 
+    //闪屏业延时名
+    public static final int HANDLER_SPLASH=1001;
+    //判断程序是否是第一次运行
+    public static final String SPLASH_IS_FIRST="isFIRST";
+
     //获取手机里的视频文件
     public static Map<String, List<Material>> getMap(Context context) {
         List<Material> list = null;

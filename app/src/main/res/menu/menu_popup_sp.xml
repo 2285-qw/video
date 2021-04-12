@@ -1,0 +1,20 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/remove"
+        android:icon="@mipmap/cmm"
+        android:title="重命名"
+        />
+
+    <item
+        android:id="@+id/delect"
+        android:icon="@mipmap/sc"
+        android:title="删除" />
+
+    <item
+        android:id="@+id/sd"
+        android:icon="@mipmap/sm"
+        android:title="在私密文件夹锁定" />
+
+
+</menu>
