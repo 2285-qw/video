@@ -54,7 +54,7 @@ public class SplashActivity extends BaseActivity<ActivitySplashBinding> {
             showSecurityDialog();
         } else {
             //延时2秒发送出去
-           // handler.sendEmptyMessageDelayed(StaticClass.HANDLER_SPLASH, 2000);
+            handler.sendEmptyMessageDelayed(StaticClass.HANDLER_SPLASH, 2000);
         }
 
     }

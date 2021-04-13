@@ -7,11 +7,15 @@ import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.AdapterView;
 import android.widget.Toast;
 
 import com.hhdsp.video.databinding.ActivitySmwjBinding;
 import com.hhdsp.video.utils.CustomClickListener;
+import com.hhdsp.video.utils.Material;
 import com.hhdsp.video.utils.StaticClass;
+
+import java.util.List;
 
 /**
  * Time:         2021/4/7
@@ -20,6 +24,9 @@ import com.hhdsp.video.utils.StaticClass;
  * on:
  */
 public class smwjActivity extends BaseActivity<ActivitySmwjBinding> {
+
+    private long mLastClickTime;
+    private long timeInterval = 1000;
 
     public String password = "password";
 
@@ -159,6 +166,20 @@ public class smwjActivity extends BaseActivity<ActivitySmwjBinding> {
         }
 
         viewBinding.mlistview.setAdapter(new smAdapter(StaticClass.getList(this), this));
+
+        viewBinding.mlistview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                long nowTime = System.currentTimeMillis();
+                if (nowTime - mLastClickTime > timeInterval) { // 单次点击事件
+                    List<Material> list=StaticClass.getList(smwjActivity.this);
+                    GSYVideoActivity.openVideoActivity(smwjActivity.this,list,position);
+
+                }
+                mLastClickTime = nowTime;
+            }
+
+        });
 
     }
 

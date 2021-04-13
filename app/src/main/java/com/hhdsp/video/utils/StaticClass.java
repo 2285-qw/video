@@ -2,6 +2,7 @@ package com.hhdsp.video.utils;
 
 import android.content.Context;
 import android.database.Cursor;
+import android.os.Environment;
 import android.provider.MediaStore;
 import android.util.Log;
 import android.widget.ImageView;
@@ -31,9 +32,9 @@ import java.util.Map;
 public class StaticClass {
 
     //闪屏业延时名
-    public static final int HANDLER_SPLASH=1001;
+    public static final int HANDLER_SPLASH = 1001;
     //判断程序是否是第一次运行
-    public static final String SPLASH_IS_FIRST="isFIRST";
+    public static final String SPLASH_IS_FIRST = "isFIRST";
 
     //获取手机里的视频文件
     public static Map<String, List<Material>> getMap(Context context) {
@@ -73,24 +74,24 @@ public class StaticClass {
                             .getLong(cursor
                                     .getColumnIndexOrThrow(MediaStore.Video.Media.SIZE));
 
-                    if (!(title.indexOf(".")==0)){
-                    Material video = new Material();
-                    video.setName1(title);
-                    video.setSize1(size);
-                    video.setUrl1(path);
-                    video.setDuration1(duration);
-                    Log.d("PATH", "title" + title + "size" + size + "path" + path + "duration" + duration);
-                    list = new ArrayList<Material>();
-                    List strings = Arrays.asList(path.split("/"));
-                    list.add(video);
-                    //判断文件夹是否存在
-                    if (map.containsKey(strings.get(strings.size() - 2))) {
-                        list = map.get(strings.get(strings.size() - 2));
+                    if (!(title.indexOf(".") == 0)) {
+                        Material video = new Material();
+                        video.setName1(title);
+                        video.setSize1(size);
+                        video.setUrl1(path);
+                        video.setDuration1(duration);
+                        Log.d("PATH", "title" + title + "size" + size + "path" + path + "duration" + duration);
+                        list = new ArrayList<Material>();
+                        List strings = Arrays.asList(path.split("/"));
                         list.add(video);
-                        map.put((String) strings.get(strings.size() - 2), list);
-                    } else {
-                        map.put((String) strings.get(strings.size() - 2), list);
-                    }
+                        //判断文件夹是否存在
+                        if (map.containsKey(strings.get(strings.size() - 2))) {
+                            list = map.get(strings.get(strings.size() - 2));
+                            list.add(video);
+                            map.put((String) strings.get(strings.size() - 2), list);
+                        } else {
+                            map.put((String) strings.get(strings.size() - 2), list);
+                        }
                     }
                 }
                 cursor.close();
@@ -224,18 +225,18 @@ public class StaticClass {
 
                         list.add(video);
                     }
-
                 }
                 cursor.close();
+
             }
         }
         return list;
     }
 
     /**
-     * @Description 得到文件所在路径（即全路径去掉完整文件名）
      * @param filepath 文件全路径名称，like mnt/sda/XX.xx
      * @return 根路径，like mnt/sda
+     * @Description 得到文件所在路径（即全路径去掉完整文件名）
      */
     public static String getPathFromFilepath(final String filepath) {
         int pos = filepath.lastIndexOf('/');
@@ -246,10 +247,10 @@ public class StaticClass {
     }
 
     /**
-     * @Description 重新整合路径，将路径一和文件名通过'/'连接起来得到新路径
      * @param path1 路径一
      * @param path2 路径二
      * @return 新路径
+     * @Description 重新整合路径，将路径一和文件名通过'/'连接起来得到新路径
      */
     public static String makePath(final String path1, final String path2) {
         if (path1.endsWith(File.separator)) {
@@ -258,6 +259,49 @@ public class StaticClass {
         return path1 + File.separator + path2;
     }
 
+    /**
+     * 删除单个文件
+     *
+     * @param filePath 被删除文件的文件名
+     * @return 文件删除成功返回true，否则返回false
+     */
+    public static boolean deleteFile(String filePath) {
+        File file = new File(filePath);
+        file.setExecutable(true, false);
+        file.setReadable(true, false);
+        file.setWritable(true, false);
+        if (file.isFile() && file.exists()) {
+            return forceDelete(file);
+        }
+        return false;
+    }
+
+    /**
+     * 删除已存储的文件
+     */
+    public static boolean deletefile(String fileName) {
+        try {
+            // 找到文件所在的路径并删除该文件
+            File file = new File(Environment.getExternalStorageDirectory(), fileName);
+            file.delete();
+            return file.exists();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
+
+    //垃圾回收再次删除
+    public static boolean forceDelete(File f) {
+        boolean result = false;
+        int tryCount = 0;
+        while (!result && tryCount++ < 10) {
+            System.gc();
+            result = f.delete();
+        }
+        return result;
+    }
 
 
 }
