@@ -12,6 +12,7 @@
     <uses-permission
         android:name="android.permission.WRITE_MEDIA_STORAGE"
         tools:ignore="ProtectedPermissions" />
+    <uses-permission android:name="android.permission.MEDIA_MOUTED"/>
 
     <application
         android:allowBackup="true"

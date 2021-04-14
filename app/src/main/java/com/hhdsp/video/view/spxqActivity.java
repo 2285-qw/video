@@ -12,6 +12,7 @@ import android.widget.Toast;
 
 import com.hhdsp.video.MainActivity;
 import com.hhdsp.video.R;
+import com.hhdsp.video.databinding.ActivityMainBinding;
 import com.hhdsp.video.databinding.ActivitySpxqBinding;
 import com.hhdsp.video.utils.Material;
 
@@ -30,6 +31,7 @@ public class spxqActivity extends BaseActivity<ActivitySpxqBinding> {
 
     private long mLastClickTime;
     private long timeInterval = 1000;
+    spAdapter adapter;
 
     public static void openActivity(Context context, String title, List list) {
         Intent intent = new Intent(context, spxqActivity.class);
@@ -38,6 +40,11 @@ public class spxqActivity extends BaseActivity<ActivitySpxqBinding> {
         intent.putExtra("list", (Serializable) list);
         context.startActivity(intent);
     }
+
+    public static void update(){
+
+    }
+
 
     @Override
     protected void init(Bundle savedInstanceState) {
@@ -50,7 +57,9 @@ public class spxqActivity extends BaseActivity<ActivitySpxqBinding> {
 
         viewBinding.include.toolbarTitle.setText(getIntent().getStringExtra("title"));
 
-        viewBinding.mlistview.setAdapter(new spAdapter((List) getIntent().getSerializableExtra("list"), this));
+        adapter=new spAdapter((List) getIntent().getSerializableExtra("list"), this);
+        viewBinding.mlistview.setAdapter(adapter);
+        adapter.notifyDataSetChanged();
 
         viewBinding.mlistview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override

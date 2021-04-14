@@ -1,7 +1,11 @@
 package com.hhdsp.video.utils;
 
 import android.content.Context;
+import android.content.Intent;
 import android.database.Cursor;
+import android.media.MediaScannerConnection;
+import android.net.Uri;
+import android.os.Build;
 import android.os.Environment;
 import android.provider.MediaStore;
 import android.util.Log;
@@ -20,6 +24,7 @@ import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 
@@ -259,49 +264,92 @@ public class StaticClass {
         return path1 + File.separator + path2;
     }
 
+
+
+    //删除文件后更新数据库  通知媒体库更新文件夹
+    public static void updateFileFromDatabase(Context context, File file) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+            String[] paths = new String[]{Environment.getExternalStorageDirectory().toString()};
+            MediaScannerConnection.scanFile(context, paths, null, null);
+            MediaScannerConnection.scanFile(context, new String[]{
+                            file.getAbsolutePath()},
+                    null, new MediaScannerConnection.OnScanCompletedListener() {
+                        public void onScanCompleted(String path, Uri uri) {
+                        }
+                    });
+        } else {
+            context.sendBroadcast(new Intent(Intent.ACTION_MEDIA_MOUNTED, Uri.parse("file://" + Environment.getExternalStorageDirectory())));
+        }
+    }
+
+
     /**
-     * 删除单个文件
+     * 重命名文件
      *
-     * @param filePath 被删除文件的文件名
-     * @return 文件删除成功返回true，否则返回false
+     * @param oldPath 原来的文件地址
+     * @param newPath 新的文件地址
      */
-    public static boolean deleteFile(String filePath) {
-        File file = new File(filePath);
-        file.setExecutable(true, false);
-        file.setReadable(true, false);
-        file.setWritable(true, false);
-        if (file.isFile() && file.exists()) {
-            return forceDelete(file);
+    public static boolean renameFile(String oldPath, String newPath) {
+        File oleFile = new File(oldPath);
+        File newFile = new File(newPath+".mp4");
+
+        if (newFile.exists()) {
+
         }
-        return false;
+
+        Log.d("oooo",oleFile.getName()+"--"+newFile.getName()+"--"+newPath);
+
+        //执行重命名
+        boolean b = oleFile.renameTo(newFile);
+
+        return b;
     }
+
 
     /**
-     * 删除已存储的文件
-     */
-    public static boolean deletefile(String fileName) {
-        try {
-            // 找到文件所在的路径并删除该文件
-            File file = new File(Environment.getExternalStorageDirectory(), fileName);
-            file.delete();
-            return file.exists();
-        } catch (Exception e) {
-            e.printStackTrace();
+     * 传入修改的文件名和路径
+     **/
+    public static String setFileReleaseNames(String mFileName, String SD_FOLDER) {
+        String fileReleaseName;//文件最终名字
+        File f = new File(SD_FOLDER);
+        Log.d("2222",f.exists()+"");
+        if (f.exists()) {//判断路径是否存在
+            File[] files = f.listFiles();
+            HashSet hashSet = new HashSet<>();
+            for (File file : files) {
+                if (file.isFile()) {
+                    String name = file.getName();
+                    hashSet.add(name);
+                }
+            }
+            int a = 1;
+            while (true) {
+                if (a != 1) {
+                    String[] split = mFileName.split("\\.");
+                    mFileName = split[0] + "(" + a + ")." + split[1];
+                }
+                if (!hashSet.contains(mFileName)) {
+                    fileReleaseName = mFileName;
+                    return fileReleaseName;
+                } else {
+                    a++;
+                }
+            }
         }
-        return false;
+        return "0000";
     }
 
 
-    //垃圾回收再次删除
-    public static boolean forceDelete(File f) {
-        boolean result = false;
-        int tryCount = 0;
-        while (!result && tryCount++ < 10) {
-            System.gc();
-            result = f.delete();
-        }
-        return result;
+    public static void mediaScan(File file, Context context) {
+        MediaScannerConnection.scanFile(context,
+                new String[] { file.getAbsolutePath() }, null,
+                new MediaScannerConnection.OnScanCompletedListener() {
+                    @Override
+                    public void onScanCompleted(String path, Uri uri) {
+                        Log.v("MediaScanWork", "file " + path
+                                + " was scanned seccessfully: " + uri);
+                    }
+                });
     }
-
 
 }
