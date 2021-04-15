@@ -26,6 +26,8 @@ import com.hhdsp.video.utils.Material;
 import java.io.File;
 import java.lang.reflect.Method;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import static com.hhdsp.video.utils.StaticClass.getPathFromFilepath;
@@ -136,7 +138,7 @@ public class spAdapter extends BaseAdapter {
                         break;
                     case R.id.sd:
                         //私密文件夹按钮
-                        stDialog(fileurl);
+                        stDialog(fileurl, position);
                         break;
 
                 }
@@ -218,7 +220,6 @@ public class spAdapter extends BaseAdapter {
 
                     new spAdapter(list, mContext);
 
-
                 } else {
                     Toast.makeText(mContext, "文件删除失败", Toast.LENGTH_SHORT).show();
                 }
@@ -233,7 +234,7 @@ public class spAdapter extends BaseAdapter {
     }
 
     //锁定私密文件夹
-    private void stDialog(String fileurl) {
+    private void stDialog(String fileurl, int p) {
         //TODO 显示提醒对话框
         Dialog securityDialog = new Dialog(mContext);
         securityDialog.setCancelable(false);//返回键也会屏蔽
@@ -256,7 +257,41 @@ public class spAdapter extends BaseAdapter {
             @Override
             public void onSingleClick(View v) {
                 securityDialog.dismiss();
-                Toast.makeText(mContext, "加入私密文件夹成功", Toast.LENGTH_SHORT).show();
+
+                List name = Arrays.asList(fileurl.split("/"));
+
+                //文件名
+                Log.d("name", name.get(name.size() - 1) + "");
+
+                //文件名前加点隐藏文件得到新的文件名
+                String newname = "." + name.get(name.size() - 1);
+
+
+                //得到文件路径
+                String route = getPathFromFilepath(fileurl);
+
+
+                //新名字和路径合并得到新路径名
+                String newurl = makePath(route, newname);
+                Log.d("newmane", newurl);
+
+                //文件重命名
+                boolean b = renameFile(fileurl, newurl);
+                Log.d("ffff","fileurl"+fileurl+"newname"+newurl);
+                if (b) {
+                    //删除媒体库添加更新
+                    File file = new File(fileurl);
+                    updateFileFromDatabase(mContext, file);
+
+                    Toast.makeText(mContext, "文件重命名成功", Toast.LENGTH_SHORT).show();
+                    list.remove(p);
+                    notifyDataSetChanged();
+                    //添加更新媒体库
+                    mediaScan(new File(newurl), mContext);
+                } else {
+                    Toast.makeText(mContext, "文件重命名失败", Toast.LENGTH_SHORT).show();
+                }
+
 
             }
         });
@@ -296,33 +331,37 @@ public class spAdapter extends BaseAdapter {
                     Toast.makeText(mContext, "重名名文件不为空", Toast.LENGTH_SHORT).show();
                 } else {
                     //得到文件所在路径
-                    Log.d("文夹路径", newname.getText().toString());
-                    String mnewname = setFileReleaseNames(newname.getText().toString(), getPathFromFilepath(fileurl));
-                    Log.d("新名", mnewname);
 
-                    boolean b = renameFile(fileurl, makePath(getPathFromFilepath(fileurl), newname.getText().toString()));
+                    List suffix = Arrays.asList(fileurl.split("\\."));
 
+                    Log.d("suffix", suffix.get(suffix.size() - 1) + "");
+
+                    //得到需要修改成的文件名
+                    String tnewname = newname.getText().toString().trim() + "." + suffix.get(suffix.size() - 1);
+
+                    //对传入的文件名进行判断得到最终文件名
+                    String mnewname = setFileReleaseNames(tnewname, getPathFromFilepath(fileurl));
+
+                    //对文件重命名
+                    boolean b = renameFile(fileurl, makePath(getPathFromFilepath(fileurl), mnewname));
+
+                    //删除媒体库添加更新
                     File file = new File(fileurl);
                     updateFileFromDatabase(mContext, file);
                     if (b) {
                         //重命名成功
-                        File file1 = new File(makePath(getPathFromFilepath(fileurl), newname.getText().toString()) + ".mp4");
+                        File file1 = new File(makePath(getPathFromFilepath(fileurl), mnewname));
 
                         //更新媒体库
                         mediaScan(file1, mContext);
-                        Log.d("file", file1 + "" + makePath(getPathFromFilepath(fileurl), newname.getText().toString()));
+                        mediaScan(new File(fileurl),mContext);
 
-
-                        list.get(p).setUrl1(makePath(getPathFromFilepath(fileurl), newname.getText().toString().trim()));
+                        list.get(p).setUrl1(makePath(getPathFromFilepath(fileurl), mnewname));
                         list.get(p).setName1(mnewname);
-
-
-                        Log.d("文夹路径", getPathFromFilepath(fileurl));
 
                         notifyDataSetChanged();
                         Toast.makeText(mContext, "文件重命名成功", Toast.LENGTH_SHORT).show();
                     }
-                    Log.d("ooooo", b + "");
 
                 }
 

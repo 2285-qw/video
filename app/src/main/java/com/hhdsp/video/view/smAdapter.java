@@ -75,6 +75,7 @@ public class smAdapter extends BaseAdapter {
         loadCover(imageView, list.get(position).getUrl1(), mContext);
 
 
+        Log.d("url...",list.get(position).getUrl1());
 
         // 这里的view代表popupMenu需要依附的view
         popupMenu = new PopupMenu(mContext, imageView1);
@@ -109,8 +110,6 @@ public class smAdapter extends BaseAdapter {
                     case R.id.delect:
                         Toast.makeText(mContext, "开始删除", Toast.LENGTH_SHORT).show();
                         break;
-
-
 
                 }
                 return true;

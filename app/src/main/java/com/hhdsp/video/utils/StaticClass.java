@@ -291,7 +291,7 @@ public class StaticClass {
      */
     public static boolean renameFile(String oldPath, String newPath) {
         File oleFile = new File(oldPath);
-        File newFile = new File(newPath+".mp4");
+        File newFile = new File(newPath);
 
         if (newFile.exists()) {
 
@@ -307,7 +307,7 @@ public class StaticClass {
 
 
     /**
-     * 传入修改的文件名和路径
+     * 传入修改的文件名和路径整合成新文件路径
      **/
     public static String setFileReleaseNames(String mFileName, String SD_FOLDER) {
         String fileReleaseName;//文件最终名字
