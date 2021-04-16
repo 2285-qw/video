@@ -113,6 +113,8 @@ public class SplashActivity extends BaseActivity<ActivitySplashBinding> {
         public void onClick(View widget) { //在此处理点击事件
             //startActivity(new Intent(SplashActivity.this,yisiActivity.class));
             //TODO 点击事件处理
+            //隐私政策
+            WebViewActivity.openActivity(SplashActivity.this,"http://huihaoda.cn/yinsi/");
 
         }
 
@@ -125,8 +127,8 @@ public class SplashActivity extends BaseActivity<ActivitySplashBinding> {
     private class TextClick1 extends ClickableSpan {
         @Override
         public void onClick(View widget) { //在此处理点击事件
-            //startActivity(new Intent(SplashActivity.this,User_agreement.class));
-            //Log.e("eeee_click", "点击");
+            //用户协议
+            WebViewActivity.openActivity(SplashActivity.this,"http://huihaoda.cn/yhxy/");
             //TODO 点击事件处理
         }
 

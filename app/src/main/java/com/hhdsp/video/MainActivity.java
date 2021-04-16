@@ -17,6 +17,7 @@ import com.hhdsp.video.databinding.ActivityMainBinding;
 import com.hhdsp.video.utils.Material;
 import com.hhdsp.video.utils.StaticClass;
 import com.hhdsp.video.view.BaseActivity;
+import com.hhdsp.video.view.WebViewActivity;
 import com.hhdsp.video.view.smwjActivity;
 import com.hhdsp.video.view.spxqActivity;
 
@@ -65,6 +66,13 @@ public class MainActivity extends BaseActivity<ActivityMainBinding> {
                             startActivity(new Intent(MainActivity.this, smwjActivity.class));
                             break;
                         case R.id.nav_about:
+                            //隐私政策
+                            WebViewActivity.openActivity(MainActivity.this,"http://huihaoda.cn/yinsi/");
+                            break;
+                        case R.id.nav_gallery:
+                            //用户协议
+                            WebViewActivity.openActivity(MainActivity.this,"http://huihaoda.cn/yhxy/");
+                            break;
                     }
                     mLastClickTime = nowTime;
                 }

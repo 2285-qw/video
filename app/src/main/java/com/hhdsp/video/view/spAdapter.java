@@ -22,6 +22,7 @@ import android.widget.Toast;
 import com.hhdsp.video.R;
 import com.hhdsp.video.utils.CustomClickListener;
 import com.hhdsp.video.utils.Material;
+import com.hhdsp.video.utils.TestModel;
 
 import java.io.File;
 import java.lang.reflect.Method;
@@ -30,6 +31,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import static com.hhdsp.video.application.BaseApplication.liteOrm;
 import static com.hhdsp.video.utils.StaticClass.getPathFromFilepath;
 import static com.hhdsp.video.utils.StaticClass.loadCover;
 import static com.hhdsp.video.utils.StaticClass.makePath;
@@ -118,6 +120,7 @@ public class spAdapter extends BaseAdapter {
 
         String fileurl = list.get(position).getUrl1();
         String nametitle = list.get(position).getName1();
+        long date = list.get(position).getDuration1();
         File file = new File(fileurl);
         // 通过上面这几行代码，就可以把控件显示出来了
         finalPopupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
@@ -138,7 +141,7 @@ public class spAdapter extends BaseAdapter {
                         break;
                     case R.id.sd:
                         //私密文件夹按钮
-                        stDialog(fileurl, position);
+                        stDialog(fileurl, position, date);
                         break;
 
                 }
@@ -234,7 +237,7 @@ public class spAdapter extends BaseAdapter {
     }
 
     //锁定私密文件夹
-    private void stDialog(String fileurl, int p) {
+    private void stDialog(String fileurl, int p, long date) {
         //TODO 显示提醒对话框
         Dialog securityDialog = new Dialog(mContext);
         securityDialog.setCancelable(false);//返回键也会屏蔽
@@ -277,19 +280,26 @@ public class spAdapter extends BaseAdapter {
 
                 //文件重命名
                 boolean b = renameFile(fileurl, newurl);
-                Log.d("ffff","fileurl"+fileurl+"newname"+newurl);
+                Log.d("ffff", "fileurl" + fileurl + "newname" + newurl);
                 if (b) {
                     //删除媒体库添加更新
                     File file = new File(fileurl);
                     updateFileFromDatabase(mContext, file);
 
-                    Toast.makeText(mContext, "文件重命名成功", Toast.LENGTH_SHORT).show();
+                    TestModel testModel = new TestModel();
+                    testModel.setUrl(newurl);
+                    testModel.setDate(date);
+                    liteOrm.insert(testModel);
+
+
+                    Toast.makeText(mContext, "私密文件添加成功", Toast.LENGTH_SHORT).show();
                     list.remove(p);
+
                     notifyDataSetChanged();
                     //添加更新媒体库
                     mediaScan(new File(newurl), mContext);
                 } else {
-                    Toast.makeText(mContext, "文件重命名失败", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(mContext, "私密文件添加失败", Toast.LENGTH_SHORT).show();
                 }
 
 
@@ -354,7 +364,7 @@ public class spAdapter extends BaseAdapter {
 
                         //更新媒体库
                         mediaScan(file1, mContext);
-                        mediaScan(new File(fileurl),mContext);
+                        mediaScan(new File(fileurl), mContext);
 
                         list.get(p).setUrl1(makePath(getPathFromFilepath(fileurl), mnewname));
                         list.get(p).setName1(mnewname);

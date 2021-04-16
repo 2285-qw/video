@@ -14,14 +14,17 @@ import com.hhdsp.video.databinding.ActivitySmwjBinding;
 import com.hhdsp.video.utils.CustomClickListener;
 import com.hhdsp.video.utils.Material;
 import com.hhdsp.video.utils.StaticClass;
+import com.hhdsp.video.utils.TestModel;
 
 import java.util.List;
+
+import static com.hhdsp.video.application.BaseApplication.liteOrm;
 
 /**
  * Time:         2021/4/7
  * Author:       C
  * Description:  smwjActivity
- * on:
+ * on: 私密文件夹
  */
 public class smwjActivity extends BaseActivity<ActivitySmwjBinding> {
 
@@ -45,6 +48,9 @@ public class smwjActivity extends BaseActivity<ActivitySmwjBinding> {
         if (StaticClass.fileIsExists(password, this)) {
             //文件已存在
             viewBinding.lldl.setVisibility(View.VISIBLE);
+
+            List<TestModel> list= liteOrm.query(TestModel.class);
+
 
             //初始化设置button不可点击
             viewBinding.button1.setEnabled(false);
@@ -82,6 +88,11 @@ public class smwjActivity extends BaseActivity<ActivitySmwjBinding> {
 
                     Log.d("s2", s);
                     if (s.equals(s2)) {
+
+                        if (list.size()==0){
+                            viewBinding.line4.setVisibility(View.VISIBLE);
+                        }
+
                         //登录成功
                         //关闭软键盘
                         viewBinding.lldl.setVisibility(View.GONE);
@@ -165,15 +176,21 @@ public class smwjActivity extends BaseActivity<ActivitySmwjBinding> {
 
         }
 
-        viewBinding.mlistview.setAdapter(new smAdapter(StaticClass.getList(this), this));
+        List<TestModel> list1= liteOrm.query(TestModel.class);
+
+
+        StaticClass.getList(this);
+
+        viewBinding.mlistview.setAdapter(new smAdapter(list1, this));
 
         viewBinding.mlistview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 long nowTime = System.currentTimeMillis();
                 if (nowTime - mLastClickTime > timeInterval) { // 单次点击事件
-                    List<Material> list=StaticClass.getList(smwjActivity.this);
-                    GSYVideoActivity.openVideoActivity(smwjActivity.this,list,position);
+                    //List<Material> list=StaticClass.getList(smwjActivity.this);
+                    List<TestModel> list= liteOrm.query(TestModel.class);
+                    GSYVideoActivity.openVideoActivity(smwjActivity.this,list,position,"sm");
 
                 }
                 mLastClickTime = nowTime;

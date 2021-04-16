@@ -4,11 +4,13 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
 
 import com.hhdsp.video.R;
 import com.hhdsp.video.utils.Material;
+import com.hhdsp.video.utils.TestModel;
 import com.shuyu.gsyvideoplayer.GSYBaseActivityDetail;
 import com.shuyu.gsyvideoplayer.builder.GSYVideoOptionBuilder;
 import com.shuyu.gsyvideoplayer.listener.LockClickListener;
@@ -29,12 +31,14 @@ public class GSYVideoActivity extends GSYBaseActivityDetail<StandardGSYVideoPlay
     String source1 = "https://vd3.bdstatic.com/mda-mctd1i9e7vuvugr9/1080p/cae_h264/1616894359/mda-mctd1i9e7vuvugr9.mp4?v_from_s=gz_haokan_4469&amp;auth_key=1616991828-0-0-0dfeae51c6a07f4dc266aab2017ffb99&amp;bcevod_channel=searchbox_feed&amp;pd=1&amp;pt=3&amp;abtest=3000159_2";
     int count;
     List<Material> list;
+    List<TestModel> list1;
 
-    public static void openVideoActivity(Context context,List<Material> list,int count) {
+    public static void openVideoActivity(Context context,List list,int count ,String b) {
         Intent intent = new Intent(context, GSYVideoActivity.class);
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         intent.putExtra("list", (Serializable) list);
         intent.putExtra("count",count);
+        intent.putExtra("b",b);
         context.startActivity(intent);
     }
 
@@ -89,11 +93,17 @@ public class GSYVideoActivity extends GSYBaseActivityDetail<StandardGSYVideoPlay
             }
         });
 
-
-        list=(List<Material>) getIntent().getSerializableExtra("list");
         count=getIntent().getIntExtra("count",1);
+        if (getIntent().getStringExtra("b").equals("sm")){
+            list1= (List<TestModel>) getIntent().getSerializableExtra("list");
+            Log.d("tagg",list1.size()+"----"+list1.get(count).getUrl());
+            Log.d("list11111",list1.get(count).getUrl()+"");
+            detailPlayer.setUp(list1.get(count).getUrl(),true,"ee");
+        }else {
+            list=(List<Material>) getIntent().getSerializableExtra("list");
+            detailPlayer.setUp(list.get(count).getUrl1(),true,list.get(count).getName1());
+        }
 
-        detailPlayer.setUp(list.get(count).getUrl1(),true,list.get(count).getName1());
 
         detailPlayer.startPlayLogic();
 

@@ -3,6 +3,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     package="com.hhdsp.video">
 
+
+    <uses-permission android:name="android.permission." />
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
@@ -12,9 +14,10 @@
     <uses-permission
         android:name="android.permission.WRITE_MEDIA_STORAGE"
         tools:ignore="ProtectedPermissions" />
-    <uses-permission android:name="android.permission.MEDIA_MOUTED"/>
+    <uses-permission android:name="android.permission.MEDIA_MOUTED" />
 
     <application
+        android:name=".application.BaseApplication"
         android:allowBackup="true"
         android:icon="@mipmap/log"
         android:label="@string/app_name"
@@ -22,7 +25,8 @@
         android:requestLegacyExternalStorage="true"
         android:resizeableActivity="true"
         android:supportsRtl="true"
-        android:theme="@style/Theme.Video">
+        android:theme="@style/Theme.Video"
+        android:usesCleartextTraffic="true">
         <activity android:name=".MainActivity">
 
         </activity>
@@ -48,11 +52,19 @@
             android:theme="@style/MyPopupMenu"></activity>
 
         <!-- 播放页面-->
-         <activity android:name=".view.GSYVideoActivity"
-             android:configChanges="keyboard|keyboardHidden|orientation|screenSize|screenLayout|smallestScreenSize|uiMode"
-             android:screenOrientation="behind">
+        <activity
+            android:name=".view.GSYVideoActivity"
+            android:configChanges="keyboard|keyboardHidden|orientation|screenSize|screenLayout|smallestScreenSize|uiMode"
+            android:screenOrientation="behind">
 
-         </activity>
+        </activity>
+
+        <!--Webview页面-->
+        <activity
+            android:name=".view.WebViewActivity"
+            android:screenOrientation="portrait">
+
+        </activity>
 
         <meta-data
             android:name="android.max_aspect"

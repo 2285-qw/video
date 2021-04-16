@@ -1,6 +1,7 @@
 package com.hhdsp.video.view;
 
 import android.annotation.SuppressLint;
+import android.app.Dialog;
 import android.content.Context;
 import android.util.Log;
 import android.view.Menu;
@@ -8,6 +9,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.PopupMenu;
 import android.widget.TextView;
@@ -16,12 +18,22 @@ import android.widget.Toast;
 import com.hhdsp.video.R;
 import com.hhdsp.video.utils.CustomClickListener;
 import com.hhdsp.video.utils.Material;
+import com.hhdsp.video.utils.TestModel;
 
+import java.io.File;
 import java.lang.reflect.Method;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
+import static com.hhdsp.video.application.BaseApplication.liteOrm;
+import static com.hhdsp.video.utils.StaticClass.getPathFromFilepath;
 import static com.hhdsp.video.utils.StaticClass.loadCover;
+import static com.hhdsp.video.utils.StaticClass.makePath;
+import static com.hhdsp.video.utils.StaticClass.mediaScan;
+import static com.hhdsp.video.utils.StaticClass.renameFile;
+import static com.hhdsp.video.utils.StaticClass.updateFileFromDatabase;
 
 /**
  * Time:         2021/4/10
@@ -30,7 +42,7 @@ import static com.hhdsp.video.utils.StaticClass.loadCover;
  * on:
  */
 public class smAdapter extends BaseAdapter {
-    List<Material> list;
+    List<TestModel> list;
     Context mContext;
 
     public smAdapter(List list1, Context context) {
@@ -67,15 +79,16 @@ public class smAdapter extends BaseAdapter {
         ImageView imageView1 = view.findViewById(R.id.image1);
         PopupMenu popupMenu = new PopupMenu(mContext, imageView1);
 
-        name.setText(list.get(position).getName1().substring(1));
+        List list1= Arrays.asList(list.get(position).getUrl().split("/"));
 
-        String times = getTimeShort(list.get(position).getDuration1());
+        name.setText(list1.get(list1.size()-1)+"");
+
+        String times = getTimeShort(list.get(position).getDate());
 
         time.setText(times);
-        loadCover(imageView, list.get(position).getUrl1(), mContext);
+        loadCover(imageView, list.get(position).getUrl(), mContext);
 
-
-        Log.d("url...",list.get(position).getUrl1());
+        Log.d("url...",list.get(position).getUrl());
 
         // 这里的view代表popupMenu需要依附的view
         popupMenu = new PopupMenu(mContext, imageView1);
@@ -105,10 +118,12 @@ public class smAdapter extends BaseAdapter {
                 // 控件每一个item的点击事件
                 switch (item.getItemId()) {
                     case R.id.js:
-                        Toast.makeText(mContext, "开始解锁", Toast.LENGTH_SHORT).show();
+                        //解锁
+                        stDialog(list.get(position).getUrl(),position);
                         break;
                     case R.id.delect:
-                        Toast.makeText(mContext, "开始删除", Toast.LENGTH_SHORT).show();
+                        //删除
+                        showSecurityDialog(list.get(position).getUrl(),position);
                         break;
 
                 }
@@ -150,4 +165,137 @@ public class smAdapter extends BaseAdapter {
             }
         }
     }
+
+
+
+    //删除
+    private void showSecurityDialog( String fileurl, int p) {
+        //TODO 显示提醒对话框
+        Dialog securityDialog = new Dialog(mContext);
+        securityDialog.setCancelable(false);//返回键也会屏蔽
+        securityDialog.setCanceledOnTouchOutside(false);
+        View view = View.inflate(mContext, R.layout.dialog_tishi, null);
+        TextView title = view.findViewById(R.id.title);
+        TextView ts = view.findViewById(R.id.ts);
+
+        Button f = view.findViewById(R.id.f);
+        Button t = view.findViewById(R.id.t);
+
+
+        f.setOnClickListener(new CustomClickListener() {
+            @Override
+            public void onSingleClick(View v) {
+                securityDialog.dismiss();
+                Toast.makeText(mContext, "你已取消了删除文件", Toast.LENGTH_SHORT).show();
+            }
+        });
+
+        t.setOnClickListener(new CustomClickListener() {
+            @Override
+            public void onSingleClick(View v) {
+                securityDialog.dismiss();
+
+                Log.d("wwww", fileurl);
+                File file = new File(fileurl);
+                boolean b = file.delete();
+
+                if (b) {
+                    Toast.makeText(mContext, "文件删除成功", Toast.LENGTH_SHORT).show();
+
+                    updateFileFromDatabase(mContext, file);
+
+                    //数据库中删除数据
+                    liteOrm.delete(list.get(p));
+
+                    list.remove(p);
+                    notifyDataSetChanged();
+
+                    new spAdapter(list, mContext);
+
+                } else {
+                    Toast.makeText(mContext, "文件删除失败", Toast.LENGTH_SHORT).show();
+                }
+
+
+            }
+        });
+
+        securityDialog.setContentView(view);
+        securityDialog.show();
+
+    }
+
+
+    //解锁文件
+    private void stDialog(String fileurl, int p) {
+        //TODO 显示提醒对话框
+        Dialog securityDialog = new Dialog(mContext);
+        securityDialog.setCancelable(false);//返回键也会屏蔽
+        securityDialog.setCanceledOnTouchOutside(false);
+        View view = View.inflate(mContext, R.layout.dialog_js, null);
+
+        Button f = view.findViewById(R.id.f);
+        Button t = view.findViewById(R.id.t);
+
+
+        f.setOnClickListener(new CustomClickListener() {
+            @Override
+            public void onSingleClick(View v) {
+                securityDialog.dismiss();
+                Toast.makeText(mContext, "您已取消解锁文件", Toast.LENGTH_SHORT).show();
+            }
+        });
+
+        t.setOnClickListener(new CustomClickListener() {
+            @Override
+            public void onSingleClick(View v) {
+                securityDialog.dismiss();
+
+                List name = Arrays.asList(fileurl.split("/"));
+
+                //文件名
+                Log.d("name", name.get(name.size() - 1) + "");
+
+                //删除文件名前的点
+                String newname = name.get(name.size() - 1).toString().substring(1);
+
+
+                //得到文件路径
+                String route = getPathFromFilepath(fileurl);
+
+
+                //新名字和路径合并得到新路径名
+                String newurl = makePath(route, newname);
+                Log.d("newmane", newurl);
+
+                //文件重命名
+                boolean b = renameFile(fileurl, newurl);
+                Log.d("ffff", "fileurl" + fileurl + "newname" + newurl);
+                if (b) {
+                    //删除媒体库添加更新
+                    File file = new File(fileurl);
+                    updateFileFromDatabase(mContext, file);
+                    //数据库中删除数据
+                    liteOrm.delete(list.get(p));
+
+
+                    Toast.makeText(mContext, "私密文件解锁成功", Toast.LENGTH_SHORT).show();
+                    list.remove(p);
+
+                    notifyDataSetChanged();
+                    //添加更新媒体库
+                    mediaScan(new File(newurl), mContext);
+                } else {
+                    Toast.makeText(mContext, "私密文件解锁失败", Toast.LENGTH_SHORT).show();
+                }
+
+
+            }
+        });
+
+        securityDialog.setContentView(view);
+        securityDialog.show();
+
+    }
+
 }

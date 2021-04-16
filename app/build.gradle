@@ -27,9 +27,9 @@ android {
         targetCompatibility JavaVersion.VERSION_1_8
     }
 
-        viewBinding {
-            enabled = true
-        }
+    viewBinding {
+        enabled = true
+    }
 
 }
 
@@ -38,6 +38,7 @@ dependencies {
     implementation 'androidx.appcompat:appcompat:1.2.0'
     implementation 'com.google.android.material:material:1.2.1'
     implementation 'androidx.constraintlayout:constraintlayout:2.0.4'
+    implementation files('libs\\lite-orm-1.9.2.jar')
     testImplementation 'junit:junit:4.+'
     androidTestImplementation 'androidx.test.ext:junit:1.1.2'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.3.0'
@@ -50,5 +51,13 @@ dependencies {
 
 
     compile 'com.github.bumptech.glide:glide:4.0.0'
+
+    // 友盟基础组件库（所有友盟业务SDK都依赖基础组件库）
+    implementation "com.umeng.umsdk:common:9.3.6"
+    implementation "com.umeng.umsdk:asms:1.2.0" // asms包依赖(必选)
+
+    // 下面各SDK根据宿主App是否使用相关业务按需引入。
+    implementation "com.umeng.umsdk:apm:1.1.1" // 应用性能监控SDK依赖(可选)
+
 
 }

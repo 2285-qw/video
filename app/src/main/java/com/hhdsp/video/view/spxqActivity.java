@@ -67,7 +67,7 @@ public class spxqActivity extends BaseActivity<ActivitySpxqBinding> {
                 long nowTime = System.currentTimeMillis();
                 if (nowTime - mLastClickTime > timeInterval) { // 单次点击事件
                     List<Material> list=(List) getIntent().getSerializableExtra("list");
-                    GSYVideoActivity.openVideoActivity(spxqActivity.this,list,position);
+                    GSYVideoActivity.openVideoActivity(spxqActivity.this,list,position,"");
 
                 }
                 mLastClickTime = nowTime;
