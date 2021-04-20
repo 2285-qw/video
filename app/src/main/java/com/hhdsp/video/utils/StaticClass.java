@@ -36,6 +36,7 @@ import java.util.Map;
  */
 public class StaticClass {
 
+    public static final String NOT_NOTICE = "no";//权限申请名
     //闪屏业延时名
     public static final int HANDLER_SPLASH = 1001;
     //判断程序是否是第一次运行

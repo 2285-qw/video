@@ -1,9 +1,12 @@
 package com.hhdsp.video.view;
 
+import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.Dialog;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.Color;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -17,6 +20,8 @@ import android.view.View;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 
 import com.hhdsp.video.MainActivity;
 import com.hhdsp.video.R;
@@ -46,9 +51,13 @@ public class SplashActivity extends BaseActivity<ActivitySplashBinding> {
         }
     };
 
+
+    // 要申请的权限
+    private String[] permissions = {Manifest.permission.READ_EXTERNAL_STORAGE,Manifest.permission.WRITE_EXTERNAL_STORAGE};
+
+
     @Override
     protected void init(Bundle savedInstanceState) {
-
         //判断是否第一次执行
         if (isFirst()) {
             showSecurityDialog();
