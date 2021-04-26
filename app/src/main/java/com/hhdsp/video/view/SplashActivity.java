@@ -4,9 +4,7 @@ import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.Dialog;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.graphics.Color;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -20,11 +18,11 @@ import android.view.View;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
 
 import com.hhdsp.video.MainActivity;
 import com.hhdsp.video.R;
+
+import com.hhdsp.video.ad.view.SplashAdActivity;
 import com.hhdsp.video.databinding.ActivitySplashBinding;
 import com.hhdsp.video.utils.StaticClass;
 import com.hhdsp.video.utils.shareUtils;
@@ -43,7 +41,7 @@ public class SplashActivity extends BaseActivity<ActivitySplashBinding> {
             super.handleMessage(msg);
             switch (msg.what) {
                 case StaticClass.HANDLER_SPLASH:
-                        startActivity(new Intent(SplashActivity.this, MainActivity.class));
+                        startActivity(new Intent(SplashActivity.this, SplashAdActivity.class));
                     finish();
                     break;
             }

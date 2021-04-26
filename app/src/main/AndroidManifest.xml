@@ -3,8 +3,6 @@
     xmlns:tools="http://schemas.android.com/tools"
     package="com.hhdsp.video">
 
-
-    <uses-permission android:name="android.permission." />
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
@@ -27,60 +25,56 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Video"
         android:usesCleartextTraffic="true">
-        <activity android:name=".MainActivity">
-
-        </activity>
-
-        <!--启动页-->
+        <activity android:name=".ad.view.SplashAdActivity"></activity>
+        <activity android:name=".MainActivity"></activity> <!-- 启动页 -->
         <activity android:name=".view.SplashActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-        </activity>
-
-        <!--私密文件-->
+        </activity> <!-- 私密文件 -->
         <activity
             android:name=".view.smwjActivity"
             android:screenOrientation="portrait"
-            android:theme="@style/MyPopupMenu"></activity>
-
-        <!--视频文件-->
+            android:theme="@style/MyPopupMenu" /> <!-- 视频文件 -->
         <activity
             android:name=".view.spxqActivity"
             android:screenOrientation="portrait"
-            android:theme="@style/MyPopupMenu"></activity>
-
-        <!-- 播放页面-->
+            android:theme="@style/MyPopupMenu" /> <!-- 播放页面 -->
         <activity
             android:name=".view.GSYVideoActivity"
             android:configChanges="keyboard|keyboardHidden|orientation|screenSize|screenLayout|smallestScreenSize|uiMode"
-            android:screenOrientation="behind">
-
-        </activity>
-
-        <!--Webview页面-->
+            android:screenOrientation="behind"></activity> <!-- Webview页面 -->
         <activity
             android:name=".view.WebViewActivity"
-            android:screenOrientation="portrait">
-
-        </activity>
+            android:screenOrientation="portrait"></activity>
 
         <meta-data
             android:name="android.max_aspect"
-            android:value="2.4" />
-
-        <!--沉浸式状态栏-->
-        <!--适配华为刘海屏-->
+            android:value="2.4" /> <!-- 沉浸式状态栏 -->
+        <!-- 适配华为刘海屏 -->
         <meta-data
             android:name="android.notch_support"
-            android:value="true" />
-        <!--适配小米刘海屏-->
+            android:value="true" /> <!-- 适配小米刘海屏 -->
         <meta-data
             android:name="notch.config"
             android:value="portrait|landscape" />
 
-    </application>
+        <provider
+            android:name="com.bytedance.sdk.openadsdk.TTFileProvider"
+            android:authorities="${applicationId}.TTFileProvider"
+            android:exported="false"
+            android:grantUriPermissions="true">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/file_paths" />
+        </provider>
 
+        <provider
+            android:name="com.bytedance.sdk.openadsdk.multipro.TTMultiProvider"
+            android:authorities="${applicationId}.TTMultiProvider"
+            android:exported="false" />
+    </application>
 
 </manifest>

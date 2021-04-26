@@ -66,8 +66,9 @@ public class MainActivity extends BaseActivity<ActivityMainBinding> {
                                 // 检查该权限是否已经获取
                                 int i = ContextCompat.checkSelfPermission(getApplicationContext(), permissions[0]);
 
+                                int V = ContextCompat.checkSelfPermission(getApplicationContext(), permissions[1]);
                                 // 权限是否已经 授权 GRANTED---授权  DINIED---拒绝
-                                if (i != PackageManager.PERMISSION_GRANTED) {
+                                if (i != PackageManager.PERMISSION_GRANTED || V !=PackageManager.PERMISSION_GRANTED) {
                                     // 如果没有授予该权限，就去提示用户请求
                                     ActivityCompat.requestPermissions(MainActivity.this, permissions, 0x11);
                                 }
@@ -132,7 +133,7 @@ public class MainActivity extends BaseActivity<ActivityMainBinding> {
                             }
                             String version = packInfo.versionName;
                             //用户协议
-                            Toast.makeText(MainActivity.this, "当前版本"+version+"已是最新版本", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(MainActivity.this, "当前版本" + version + "已是最新版本", Toast.LENGTH_SHORT).show();
                             break;
                     }
                     mLastClickTime = nowTime;
@@ -175,6 +176,8 @@ public class MainActivity extends BaseActivity<ActivityMainBinding> {
                     shareUtils.putBoolean(MainActivity.this, StaticClass.NOT_NOTICE, false);
                     Toast toast = Toast.makeText(this, "获取权限成功", Toast.LENGTH_LONG);
                     toast.show();
+                    map = StaticClass.getMap(this);
+                    viewBinding.mlistview.setAdapter(new mainList(map, this));
                 }
             }
         }
@@ -183,7 +186,14 @@ public class MainActivity extends BaseActivity<ActivityMainBinding> {
     @Override
     protected void onResume() {
         super.onResume();
-        map = StaticClass.getMap(this);
-        viewBinding.mlistview.setAdapter(new mainList(map, this));
+        // 检查该权限是否已经获取
+        int i = ContextCompat.checkSelfPermission(getApplicationContext(), permissions[0]);
+        int V = ContextCompat.checkSelfPermission(getApplicationContext(), permissions[1]);
+        // 权限是否已经 授权 GRANTED---授权  DINIED---拒绝
+        if (i != PackageManager.PERMISSION_DENIED && V !=PackageManager.PERMISSION_DENIED ){
+            map = StaticClass.getMap(this);
+            viewBinding.mlistview.setAdapter(new mainList(map, this));
+        }
+
     }
 }

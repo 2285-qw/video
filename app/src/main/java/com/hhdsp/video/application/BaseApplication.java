@@ -2,6 +2,7 @@ package com.hhdsp.video.application;
 
 import android.app.Application;
 
+import com.hhdsp.video.ad.config.TTAdManagerHolder;
 import com.litesuits.orm.LiteOrm;
 import com.litesuits.orm.db.DataBaseConfig;
 import com.umeng.analytics.MobclickAgent;
@@ -19,10 +20,15 @@ public class BaseApplication extends Application {
     public void onCreate() {
         super.onCreate();
 
+
+        //穿山甲SDK初始化
+        //强烈建议在应用对应的Application#onCreate()方法中调用，避免出现content为null的异常
+        TTAdManagerHolder.init(this);
+
         //调试 log
         UMConfigure.setLogEnabled(true);
         //初始化sdk
-        UMConfigure.init(this,"60793c4e9e4e8b6f6171a42a", "BFQ", UMConfigure.DEVICE_TYPE_PHONE,null);
+        UMConfigure.init(this,"60793c4e9e4e8b6f6171a42a", "HUAWEI", UMConfigure.DEVICE_TYPE_PHONE,null);
         //页面采集模式
         MobclickAgent.setPageCollectionMode(MobclickAgent.PageMode.AUTO);
 
@@ -42,4 +48,5 @@ public class BaseApplication extends Application {
 
 
     }
+
 }
