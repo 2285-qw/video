@@ -1,4 +1,4 @@
- package com.hhdsp.video;
+package com.hhdsp.video;
 
 import android.Manifest;
 import android.app.AlertDialog;
@@ -25,6 +25,7 @@ import com.google.android.material.navigation.NavigationView;
 import com.hhdsp.video.ad.util.BannerUtil;
 import com.hhdsp.video.ad.util.InteractionUtil;
 import com.hhdsp.video.databinding.ActivityMainBinding;
+import com.hhdsp.video.utils.LogUtils;
 import com.hhdsp.video.utils.Material;
 import com.hhdsp.video.utils.StaticClass;
 import com.hhdsp.video.utils.shareUtils;
@@ -32,15 +33,18 @@ import com.hhdsp.video.view.BaseActivity;
 import com.hhdsp.video.view.WebViewActivity;
 import com.hhdsp.video.view.smwjActivity;
 import com.hhdsp.video.view.spxqActivity;
+import com.umeng.commonsdk.debug.UMLogUtils;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import static com.hhdsp.video.ad.util.TimeUtil.BannerTime;
 import static com.hhdsp.video.ad.util.TimeUtil.OnTime;
 
 public class MainActivity extends BaseActivity<ActivityMainBinding> {
+
 
     private long mLastClickTime;
     private long timeInterval = 1000;
@@ -171,12 +175,16 @@ public class MainActivity extends BaseActivity<ActivityMainBinding> {
             interactionUtil = new InteractionUtil();
             interactionUtil.loadExpressAd("946057085", 300, 300, this);
         }
-        //加载Banner广告
-       /* bannerUtil = new BannerUtil();
 
-        bannerUtil.loadExpressAd("946061392", 600, 90, findViewById(R.id.express_container), this);
-*/
+        if (BannerTime(this)) {
+            //加载Banner广告
+            bannerUtil = new BannerUtil();
+            bannerUtil.loadExpressAd("946061392", 600, 90, findViewById(R.id.express_container), this);
+
+        }
     }
+
+
 
     //是否获取权限判断
     public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {

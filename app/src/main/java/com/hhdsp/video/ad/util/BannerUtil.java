@@ -17,8 +17,14 @@ import com.bytedance.sdk.openadsdk.TTAdNative;
 import com.bytedance.sdk.openadsdk.TTAppDownloadListener;
 import com.bytedance.sdk.openadsdk.TTNativeExpressAd;
 import com.hhdsp.video.ad.config.TTAdManagerHolder;
+import com.hhdsp.video.utils.LogUtils;
+import com.hhdsp.video.utils.shareUtils;
+import com.umeng.commonsdk.debug.UMLogUtils;
 
 import java.util.List;
+
+import static com.hhdsp.video.ad.util.TimeUtil.BannerRunTime;
+
 
 public class BannerUtil {
     private TTAdNative mTTAdNative;
@@ -68,6 +74,7 @@ public class BannerUtil {
                 mTTAd.setSlideIntervalTime(30 * 1000);
                 bindAdListener(mTTAd);
                 startTime = System.currentTimeMillis();
+                mTTAd.render();
                 TToast.show(mContext, "load success!");
             }
         });
@@ -161,8 +168,11 @@ public class BannerUtil {
                 public void onItemClick(FilterWord filterWord) {
                     //屏蔽广告
                     TToast.show(mContext, "点击 " + filterWord.getName());
+                    shareUtils.putLong(mContext,BannerRunTime,System.currentTimeMillis());
+                    LogUtils.d("TIME"+System.currentTimeMillis());
                     //用户选择不喜欢原因后，移除广告展示
                     mExpressContainer.removeAllViews();
+
                 }
             });
             dislikeDialog.setOnPersonalizationPromptClick(new DislikeDialog.OnPersonalizationPromptClick() {
@@ -178,12 +188,13 @@ public class BannerUtil {
         ad.setDislikeCallback((Activity) mContext, new TTAdDislike.DislikeInteractionCallback() {
             @Override
             public void onShow() {
-
             }
 
             @Override
+
             public void onSelected(int position, String value, boolean enforce) {
                 TToast.show(mContext, "点击 " + value);
+                shareUtils.putLong(mContext,BannerRunTime,System.currentTimeMillis());
                 mExpressContainer.removeAllViews();
                 //用户选择不喜欢原因后，移除广告展示
                 if (enforce) {
