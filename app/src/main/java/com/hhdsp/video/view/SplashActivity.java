@@ -155,4 +155,6 @@ public class SplashActivity extends BaseActivity<ActivitySplashBinding> {
             return false;
         }
     }
+
+
 }

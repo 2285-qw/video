@@ -54,5 +54,16 @@ public class shareUtils {
         sp.edit().clear().commit();
     }
 
+    //键 值
+    public static void putLong(Context mContext, String key, Long value){
+        SharedPreferences sp=mContext.getSharedPreferences(NAME, Context.MODE_PRIVATE);
+        sp.edit().putLong(key,value).commit();
+    }
+    //键 默认值
+    public static Long getLong(Context mContext, String key, Long devalue){
+        SharedPreferences sp=mContext.getSharedPreferences(NAME, Context.MODE_PRIVATE);
+        return sp.getLong(key,devalue);
+    }
+
 
 }

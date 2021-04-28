@@ -1,4 +1,4 @@
-package com.hhdsp.video;
+ package com.hhdsp.video;
 
 import android.Manifest;
 import android.app.AlertDialog;
@@ -9,6 +9,7 @@ import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.MenuItem;
 import android.view.View;
@@ -21,6 +22,8 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
 import com.google.android.material.navigation.NavigationView;
+import com.hhdsp.video.ad.util.BannerUtil;
+import com.hhdsp.video.ad.util.InteractionUtil;
 import com.hhdsp.video.databinding.ActivityMainBinding;
 import com.hhdsp.video.utils.Material;
 import com.hhdsp.video.utils.StaticClass;
@@ -35,12 +38,16 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import static com.hhdsp.video.ad.util.TimeUtil.OnTime;
+
 public class MainActivity extends BaseActivity<ActivityMainBinding> {
 
     private long mLastClickTime;
     private long timeInterval = 1000;
     Map<String, List<Material>> map;
+    InteractionUtil interactionUtil;
     List<Material> list;
+    BannerUtil bannerUtil;
 
     // 要申请的权限
     private String[] permissions = {Manifest.permission.READ_EXTERNAL_STORAGE, Manifest.permission.WRITE_EXTERNAL_STORAGE};
@@ -68,7 +75,7 @@ public class MainActivity extends BaseActivity<ActivityMainBinding> {
 
                                 int V = ContextCompat.checkSelfPermission(getApplicationContext(), permissions[1]);
                                 // 权限是否已经 授权 GRANTED---授权  DINIED---拒绝
-                                if (i != PackageManager.PERMISSION_GRANTED || V !=PackageManager.PERMISSION_GRANTED) {
+                                if (i != PackageManager.PERMISSION_GRANTED || V != PackageManager.PERMISSION_GRANTED) {
                                     // 如果没有授予该权限，就去提示用户请求
                                     ActivityCompat.requestPermissions(MainActivity.this, permissions, 0x11);
                                 }
@@ -159,7 +166,16 @@ public class MainActivity extends BaseActivity<ActivityMainBinding> {
             }
         });
 
+        //加载差屏广告
+        if (OnTime(this)) {
+            interactionUtil = new InteractionUtil();
+            interactionUtil.loadExpressAd("946057085", 300, 300, this);
+        }
+        //加载Banner广告
+       /* bannerUtil = new BannerUtil();
 
+        bannerUtil.loadExpressAd("946061392", 600, 90, findViewById(R.id.express_container), this);
+*/
     }
 
     //是否获取权限判断
@@ -190,10 +206,23 @@ public class MainActivity extends BaseActivity<ActivityMainBinding> {
         int i = ContextCompat.checkSelfPermission(getApplicationContext(), permissions[0]);
         int V = ContextCompat.checkSelfPermission(getApplicationContext(), permissions[1]);
         // 权限是否已经 授权 GRANTED---授权  DINIED---拒绝
-        if (i != PackageManager.PERMISSION_DENIED && V !=PackageManager.PERMISSION_DENIED ){
+        if (i != PackageManager.PERMISSION_DENIED && V != PackageManager.PERMISSION_DENIED) {
             map = StaticClass.getMap(this);
             viewBinding.mlistview.setAdapter(new mainList(map, this));
         }
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if (!(interactionUtil == null)) {
+            interactionUtil.onDestroyAd();
+        }
+
+        if (!(bannerUtil == null)) {
+            bannerUtil.deDestroy();
+        }
+
 
     }
 }
